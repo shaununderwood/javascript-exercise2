@@ -18,10 +18,11 @@ class API {
     // not using redux right now as just started on that topic
     // so this api is just a singlton for source of truth
 
-    let self = this;
-    return fetch(url)
-      .then(response => response.json())
-      .then(data => data);
+    return new Promise(function (resolve) {
+      fetch(url)
+        .then(response => response.json())
+        .then(data => resolve(data));
+    });
   }
   getUsers() {
     return this.getData(C.USERS);
