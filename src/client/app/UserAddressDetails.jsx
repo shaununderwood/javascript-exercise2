@@ -14,6 +14,10 @@ class UserAddressDetails extends Component {
     if (!address) return '';
     return JSON.stringify(address.geo);
   }
+  formatWebsite(website) {
+    if (!website) return '';
+    return `http://${website}`;
+  }
   render() {
     const { user } = this.props;
     if (!user) return '';
@@ -21,7 +25,7 @@ class UserAddressDetails extends Component {
     return (
       <ul>
         <li>Address: <address>{this.formatAddress(user.address)}</address></li>
-        <li>Website: <a href={user.website} target="_blank">{user.website}</a></li>
+        <li>Website: <a href={this.formatWebsite(user.website)} target="_blank">{user.website}</a></li>
         <li>Company Name: <b>{this.formatCompany(user.company)}</b> </li>
         <li>Map Link: <a href="#" target="_blank">{this.formatMap(user.address)}</a> </li>
       </ul>
