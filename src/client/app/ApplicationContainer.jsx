@@ -89,7 +89,7 @@ class ApplicationContainer extends Component {
         let comments = results.filter(dataset => dataset.name === 'comments')[0].data;
         let users = results.filter(dataset => dataset.name === 'users')[0].data;
 
-        // copy comments over to their respective posts
+        // copy the comments over to their respective posts
         let postMap = {};
         posts.map(post => postMap[post.id] = Object.assign({}, post));
         comments.map(comment => postMap[comment.postId].comments = [].concat((postMap[comment.postId].comments || []), [Object.assign({}, comment)]));
