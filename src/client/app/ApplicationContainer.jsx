@@ -1,40 +1,41 @@
 import React, { Component } from 'react';
 import ApplicationLayoutContainer from './ApplicationLayoutContainer.jsx';
 import API from './services/api';
-import promiscuous from 'promiscuous';
 
 class ApplicationContainer extends Component {
   constructor(props) {
     super(props);
     this.api = new API({});
     this.state = {
-      users: [],
-      posts: [],
-      comments: [],
-      selectedUserId: 0,
-      selectedUser: '',
-
-      // vars for pagination
-      // TODO: put this state with the component, and just pass userPosts
-      userPosts: [],
-      fromPage: 0,
-      pageLength: 4, // 4 posts per page
-      currentPage: 0,
+      items: [],
+      nextId: 1
     };
-    this.onChange = this.onChange.bind(this);
+
+    this.placeholder = document.createElement("li");
+    this.placeholder.className = "placeholder";
+
+    let self = this;
+    this.actions = ['dragStart', 'dragEnd', 'dragOver'];
+    this.actions.forEach(fName => self[fName] = self[fName].bind(self));
+
+    let otherFunctions = ['addItem'];
+    otherFunctions.forEach(fName => self[fName] = self[fName].bind(self));
   }
-  changeUser(userId) {
-    this.setState({
-      selectedUserId: userId,
-      selectedUser: this.getUserObject(this.state.users, userId),
-      userPosts: this.state.posts.filter(post => post.userId == userId)
+  addItem(text) {
+    let items = this.state.items.map(item => Object.assign({}, item));
+    let id = this.state.nextId;
+    // next and position of new item are synonymous
+    items.push({
+      text: text,
+      id: id,
+      position: id
     });
+    this.setState({ items: items, nextId: id + 1 });
+  }
+  changeItem(itemId, overPosition) {
+
   }
   onChange(e) {
-    if (e.target.name === 'user') {
-      this.changeUser(e.target.value);
-      return;
-    }
     if (e.target.name === 'pageButton') {
       this.setState({
         currentPage: parseInt(e.target.id)
@@ -42,71 +43,92 @@ class ApplicationContainer extends Component {
       return;
     }
   }
-  getUserObject(users, userId) {
-    let selectedUser = '';
-    users.some(user => ('' + user.id) == userId ? selectedUser = user : false);
-    return Object.assign({}, selectedUser);
-  }
   componentDidMount() {
-    let self = this;
-    let promises = [];
-    promises.push(
-      this.api.getUsers().then(
-        data => {
-          self.setState({ users: data })
-          return { name: 'users', data: data };
-        },
-        // TODO handle this correctly
-        e => console.log(e)
-      )
-    );
-
-    promises.push(
-      this.api.getPosts().then(
-        data => {
-          self.setState({ posts: data })
-          return { name: 'posts', data: data };
-        },
-        // TODO handle this correctly
-        e => console.log(e)
-      )
-    );
-
-    promises.push(
-      this.api.getComments().then(
-        data => {
-          self.setState({ comments: data })
-          return { name: 'comments', data: data };
-        },
-        // TODO handle this correctly
-        e => console.log(e)
-      )
-    );
-
-    return promiscuous.all(promises).then(
-      results => {
-        let posts = results.filter(dataset => dataset.name === 'posts')[0].data;
-        let comments = results.filter(dataset => dataset.name === 'comments')[0].data;
-        let users = results.filter(dataset => dataset.name === 'users')[0].data;
-
-        // copy the comments over to their respective posts
-        let postMap = {};
-        posts.map(post => postMap[post.id] = Object.assign({}, post));
-        comments.map(comment => postMap[comment.postId].comments = [].concat((postMap[comment.postId].comments || []), [Object.assign({}, comment)]));
-        let commentedPosts = [];
-        Object.keys(postMap).forEach(post => commentedPosts.push(postMap[post]));
-        self.setState({
-          posts: commentedPosts,
-        });
-
-        self.changeUser(1);
-      }
-    );
+    let id = 0;
+    let items = ['Shaun', 'Julia', 'Ivan', 'Anja', 'Nika', 'Pepi'].map(text => {
+      id++;
+      return Object.assign({}, { id: id, position: id, text: text });
+    });
+    id++;
+    this.setState({
+      items: items, nextId: id
+    });
   }
+  dragStart(e) {
+    this.dragged = e.currentTarget;
+    e.dataTransfer.effectAllowed = 'move';
 
+    // Firefox requires calling dataTransfer.setData
+    // for the drag to properly work
+    e.dataTransfer.setData("text/html", e.currentTarget);
+  }
+  dragEnd(e) {
+    this.dragged.style.display = "block";
+    this.dragged.parentNode.removeChild(this.placeholder);
+
+    // Update state
+    var from = Number(this.dragged.dataset.id);
+    var to = Number(this.over.dataset.id);
+    if (from < to) to--;
+    if (this.nodePlacement == "after") to++;
+
+    this.moveItem(from, to);
+  }
+  moveItem(from, to) {
+    if (from === to) return;
+    to = parseInt(to);
+    from = parseInt(from);
+
+    let items = this.state.items.map(item => {
+      let newItem = Object.assign({}, item);
+
+      if (from < to) {
+        if (newItem.position > from && newItem.position <= to) {
+          newItem.position = newItem.position - 1;
+
+        } else if (newItem.position === from) {
+          newItem.position = to;
+
+        }
+
+      } else { // from > to
+        if (newItem.position >= to && newItem.position < from) {
+          newItem.position = newItem.position + 1;
+
+        } else if (newItem.position === from) {
+          newItem.position = to;
+
+        }
+      }
+      return newItem;
+    });
+    items = items.sort((a, b) => {
+      return a.position - b.position;
+    })
+    this.setState({ items: items })
+  }
+  dragOver(e) {
+    e.preventDefault();
+    this.dragged.style.display = "none";
+    if (e.target.className == "placeholder") return;
+    this.over = e.target;
+
+    var relY = e.clientY - this.over.offsetTop;
+    var height = this.over.offsetHeight / 2;
+    var parent = e.target.parentNode;
+
+    if (relY > height) {
+      this.nodePlacement = "after";
+      parent.insertBefore(this.placeholder, e.target.nextElementSibling);
+    }
+    else if (relY < height) {
+      this.nodePlacement = "before"
+      parent.insertBefore(this.placeholder, e.target);
+    }
+  }
   render() {
     let onChange = this.onChange;
-    return <ApplicationLayoutContainer {...this.state} onChange={onChange} />;
+    return <ApplicationLayoutContainer {...this.state} dragStart={this.dragStart} dragOver={this.dragOver} dragEnd={this.dragEnd} />;
   }
 }
 

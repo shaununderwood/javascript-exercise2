@@ -33,6 +33,17 @@ class API {
   getPosts(userId) {
     return this.getData(C.POSTS);
   }
+  getAllData() {
+    // testsing async and await
+    // async function getMoreData() {
+    //   let allData = {
+    //     users: await this.getData(C.USERS),
+    //     comments: await this.getData(C.COMMENTS),
+    //     posts: await this.getData(C.POSTS)
+    //   };
+    // }
+    // console.log(getMoreData());
+  }
 }
 
 export default function (config) {
