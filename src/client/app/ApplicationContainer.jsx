@@ -18,36 +18,26 @@ class ApplicationContainer extends Component {
     this.actions = ['dragStart', 'dragEnd', 'dragOver'];
     this.actions.forEach(fName => self[fName] = self[fName].bind(self));
 
-    let otherFunctions = ['addItem'];
+    let otherFunctions = ['addItem', 'onClickHandler', 'onChange'];
     otherFunctions.forEach(fName => self[fName] = self[fName].bind(self));
   }
-  addItem(text) {
+  addItem(text, isNew = false) {
     let items = this.state.items.map(item => Object.assign({}, item));
     let id = this.state.nextId;
     // next and position of new item are synonymous
     items.push({
       text: text,
       id: id,
-      position: id
+      position: id,
+      isNew: isNew
     });
     this.setState({ items: items, nextId: id + 1 });
   }
-  changeItem(itemId, overPosition) {
-
-  }
-  onChange(e) {
-    if (e.target.name === 'pageButton') {
-      this.setState({
-        currentPage: parseInt(e.target.id)
-      });
-      return;
-    }
-  }
   componentDidMount() {
     let id = 0;
-    let items = ['Shaun', 'Julia', 'Ivan', 'Anja', 'Nika', 'Pepi'].map(text => {
+    let items = ['Electronics', 'Destinations', 'People', 'Cars', 'Computers'].map(text => {
       id++;
-      return Object.assign({}, { id: id, position: id, text: text });
+      return Object.assign({}, { id: id, position: id, text: text, type: 'category' });
     });
     id++;
     this.setState({
@@ -126,9 +116,19 @@ class ApplicationContainer extends Component {
       parent.insertBefore(this.placeholder, e.target);
     }
   }
+  onClickHandler(e) {
+    if (e.target.name === "add-category") {
+      this.addItem('new category', true);
+    }
+  }
+  onChange(e) {
+    if (e.target.name === 'new-category') {
+
+    }
+  }
   render() {
     let onChange = this.onChange;
-    return <ApplicationLayoutContainer {...this.state} dragStart={this.dragStart} dragOver={this.dragOver} dragEnd={this.dragEnd} />;
+    return <ApplicationLayoutContainer {...this.state} onChange={this.onChange} onClickHandler={this.onClickHandler} dragStart={this.dragStart} dragOver={this.dragOver} dragEnd={this.dragEnd} />;
   }
 }
 
