@@ -19,13 +19,17 @@
     "get-json": "^1.0.0",
     "http-server": "^0.11.1",
     "promiscuous": "^0.7.1",
+    "prop-types": "^15.6.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-hot-loader": "^4.0.0-rc.0",
+    "react-redux": "^5.0.7",
+    "redux": "^3.7.2",
     "webpack": "^3.11.0"
   },
   "devDependencies": {
     "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.1"
   }
 }

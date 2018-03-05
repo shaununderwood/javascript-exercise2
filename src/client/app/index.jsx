@@ -1,6 +1,23 @@
 import React from 'react';
-
 import { render } from 'react-dom';
-import ApplicationContainer from './ApplicationContainer.jsx';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import app from './services/reducers';
+import App from './components/App.jsx';
 
-render(<ApplicationContainer />, document.getElementById('app'));
+let store = createStore(app);
+
+
+import { addCategory, deleteCategory } from './services/actions';
+
+store.dispatch(addCategory('countries'));
+store.dispatch(addCategory('cars'));
+store.dispatch(addCategory('shops'));
+
+
+render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+);
