@@ -36,12 +36,9 @@ export function addCategory(text, droppable = true, draggable = true) {
     }
   };
 }
-export function updateCategory(text, id) {
+export function updateCategory(delta) {
   return {
-    type: UPDATE_CATEGORY, item: {
-      id: id,
-      text: text
-    }
+    type: SAVE_CATEGORY, item: delta
   };
 }
 export function deleteCategory(id) {

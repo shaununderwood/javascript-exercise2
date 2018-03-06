@@ -64,8 +64,8 @@ function categories(state = initialState, action) {
 
   if (action.type === SAVE_CATEGORY) {
     let newState = copyObject(state);
-    newState[action.id].editing = false;
-    newState[action.id].text = action.text;
+    // newState[action.id].editing = false;
+    newState[action.item.id].text = action.item.text;
     return newState;
   }
 

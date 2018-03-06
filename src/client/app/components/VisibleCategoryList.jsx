@@ -9,8 +9,6 @@ function mapStateToProps(state) {
   return list;
 }
 
-const VisibleCategoryList = connect(
-  mapStateToProps
-)(CategoryList);
+const VisibleCategoryList = connect(mapStateToProps)(CategoryList);
 
 export default VisibleCategoryList;

@@ -8,7 +8,7 @@ class CategoryList extends Component {
       <ul>
         {categories.map(item =>
           <li key={item.id}>
-            <Category text={item.text} position={item.position} list={item.list} />
+            <Category id={item.id} text={item.text} position={item.position} list={item.list} />
           </li>
         )}
       </ul>
