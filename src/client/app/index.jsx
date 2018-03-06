@@ -5,15 +5,24 @@ import { createStore } from 'redux';
 import app from './services/reducers';
 import App from './components/App.jsx';
 
-let store = createStore(app);
-
+import { compose, applyMiddleware } from 'redux';
+import scuttlebutt, { devToolsStateSanitizer } from 'redux-scuttlebutt';
+const devToolsConfig = {
+  stateSanitizer: devToolsStateSanitizer
+}
+const enhancer = compose(
+  scuttlebutt(),
+  window.__REDUX_DEVTOOLS_EXTENSION__
+    ? window.__REDUX_DEVTOOLS_EXTENSION__(devToolsConfig)
+    : f => f
+)
+const store = createStore(app, undefined, enhancer)
 
 import { addCategory, deleteCategory } from './services/actions';
 
-store.dispatch(addCategory('countries'));
-store.dispatch(addCategory('cars'));
-store.dispatch(addCategory('shops'));
-
+// store.dispatch(addCategory('countries'));
+// store.dispatch(addCategory('cars'));
+// store.dispatch(addCategory('shops'));
 
 render(
   <Provider store={store}>
