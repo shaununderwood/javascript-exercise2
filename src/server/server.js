@@ -23,7 +23,8 @@ app.get("/public/bundle.js", function (req, res) {
   res.sendFile(__dirname + '/client/public/bundle.js');
 });
 app.get("/primus/primus.js", function (req, res) {
-  res.sendFile(__dirname + '/node_modules/primus/dist/primus.js');
+  debugger;
+  res.sendFile(__dirname + 'node_modules/primus/primus.js');
 });
 
 dispatcher(server);

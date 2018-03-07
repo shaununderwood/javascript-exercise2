@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "./node_modules/.bin/webpack -d --watch",
-    "serve": "./node_modules/.bin/http-server -p 8000 src/client",
+    "serve": "node src/server/server.js",
     "build": "./node_modules/.bin/webpack -p"
   },
   "author": "",
@@ -18,7 +18,7 @@
     "babel-preset-react": "^6.24.1",
     "get-json": "^1.0.0",
     "http-server": "^0.11.1",
-    "primus": "^7.1.1",
+    "primus": "^6.1.0",
     "promiscuous": "^0.7.1",
     "prop-types": "^15.6.1",
     "react": "^16.2.0",
@@ -27,7 +27,8 @@
     "react-redux": "^5.0.7",
     "redux": "^3.7.2",
     "redux-scuttlebutt": "^0.3.5",
-    "webpack": "^3.11.0"
+    "webpack": "^3.11.0",
+    "webpack-hot-middleware": "^2.21.2"
   },
   "devDependencies": {
     "babel-plugin-transform-class-properties": "^6.24.1",
