@@ -11,16 +11,34 @@ const DELETE = 'DELETE';
 const UPDATE = 'UPDATE';
 const NEW = 'NEW';
 
+const ITEM_DEFAULTS = {
+  TEXT: 'New Item',
+  POSITION: null,
+  TYPE: CATEGORY,
+  PARENT_ID: null,
+};
+
 class Item {
   constructor(config) {
-    this.id = getNewId();
-    this.text = config.text || defaults.text;
-    this.position = config.position || defaults.position;
-    this.type = config.type || defaults.type;
+    config = config || {};
+    this.id = config.id || getNewId();
+    this.text = config.text || ITEM_DEFAULTS.text;
+    this.position = config.position || ITEM_DEFAULTS.POSITION;
+    this.type = config.type || ITEM_DEFAULTS.TYPE;
     if (this.type === CATEGORY) {
       this.list = [];
     }
+    this.parentId = config.parentId || ITEM_DEFAULTS.PARENT_ID;
   }
+  // constructor(config) {
+  //   this.id = getNewId();
+  //   this.text = config.text || defaults.text;
+  //   this.position = config.position || defaults.position;
+  //   this.type = config.type || defaults.type;
+  //   if (this.type === CATEGORY) {
+  //     this.list = [];
+  //   }
+  // }
   addItem(item) { // reducer
     if (this.type === CATEGORY)
       this.list.push(item.id);
@@ -61,7 +79,7 @@ function testItem() {
 class ItemList {
   constructor() {
     this.map = {};
-    this.top = new Item({ text: 'top most item', type: CATEGORY });
+    this.top = new Item({ id: 1, text: 'top most item', type: CATEGORY });
     this.mapItem(this.top);
   }
   setNetworkAdapter(networkAdapter) {
@@ -180,7 +198,7 @@ class NetworkAdapter {
     if (clientId === this.clientId) return;
 
     if (item.type === CATEGORY) {
-      debugger;
+      // debugger;
       if (action === DELETE) {
         return this.itemList.removeItem(item, true);
       }
