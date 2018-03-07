@@ -13,7 +13,7 @@
 
         git checkout 02-server
         npm i
-        open this README.md file for instructions
+        open README.md
 
 4. To view the vanilla javscript version
 
