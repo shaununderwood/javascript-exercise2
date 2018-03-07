@@ -5,7 +5,7 @@
 import './actions';
 import './copyObject';
 import idGenerator from './IdGenerator';
-import { CATEGORY, ADD_CATEGORY, EDIT_CATEGORY, SAVE_CATEGORY, DELETE_CATEGORY, MOVE_CATEGORY } from './actions';
+import { CATEGORY, ADD_CATEGORY, EDIT_CATEGORY, SAVE_CATEGORY, DELETE_CATEGORY, MOVE_CATEGORY, ADD_ITEM, SAVE_ITEM } from './actions';
 
 import copyObject from './copyObject';
 import { createStore } from 'redux'
@@ -13,19 +13,21 @@ import { combineReducers } from 'redux';
 
 const getNewId = idGenerator().getNewId;
 
-const initialState = {
-  1: {
-    type: CATEGORY,
-    id: getNewId(),
-    text: 'Shared Category Board',
-    position: 1,
-    droppable: false,
-    draggable: false,
-    list: []
+export const initialState = {
+  categories: {
+    1: {
+      type: CATEGORY,
+      id: getNewId(),
+      text: 'Shared Category Board',
+      position: 1,
+      droppable: false,
+      draggable: false,
+      list: []
+    }
   }
 };
 
-function categories(state = initialState, action) {
+function categories(state = {}, action) {
   if (!action) return state;
 
   if (action.type === ADD_CATEGORY) {
@@ -62,7 +64,7 @@ function categories(state = initialState, action) {
     return newState;
   }
 
-  if (action.type === SAVE_CATEGORY) {
+  if (action.type === SAVE_CATEGORY || action.type === SAVE_ITEM) {
     let newState = copyObject(state);
     // newState[action.id].editing = false;
     newState[action.item.id].text = action.item.text;
@@ -71,6 +73,14 @@ function categories(state = initialState, action) {
 
   if (action.type === MOVE_CATEGORY) {
     alert('TODO: ' + MOVE_CATEGORY);
+  }
+
+  if (action.type === ADD_ITEM) {
+    let newState = copyObject(state);
+    let newItem = new Item(action.item, getLastPositionInList(newState[action.item.categoryId]));
+    newState[action.item.categoryId].list.push(newItem.id);
+    newState[newItem.id] = newItem;
+    return newState;
   }
 
   return state;
@@ -85,8 +95,18 @@ function getLastPositionInList(listContainer) {
   return listContainer.list.length + 1;
 }
 
-function newCategory(action) {
-  let category = copyObject(action);
+class Item {
+  constructor(data, position) {
+    this.type = 'ITEM';
+    this.text = data.text;
+    this.position = position;
+    this.id = getNewId(this);
+  }
+}
+
+// TODO really dont like what i did here
+function newCategory(data) {
+  let category = copyObject(data);
   category.id = getNewId(category);
   return category;
 }

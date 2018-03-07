@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { updateCategory } from '../services/actions';
+import { updateCategory, addItem } from '../services/actions';
 import { connect } from 'react-redux';
+import ItemListContainer from './ItemListContainer.jsx';
+import EditingButtons from './EditingButtons.jsx';
 
 class Category extends Component {
   constructor(props) {
@@ -15,9 +17,11 @@ class Category extends Component {
     this.onClickHandler = this.onClickHandler.bind(this);
   }
   toggleEdit(e) {
-    this.setState({
-      editing: !this.state.editing,
-      text: this.props.text
+    this.setState((prevState, props) => {
+      return {
+        editing: !prevState.editing,
+        text: props.text
+      }
     });
   }
   onChangeHandler(e) {
@@ -27,38 +31,27 @@ class Category extends Component {
   }
   onClickHandler(e) {
     if (e.target.name === 'save') {
-      this.setState({
-        editing: !this.state.editing
+      this.setState(prevState => {
+        return {
+          editing: !prevState.editing,
+        }
       });
       this.props.onUpdateCategory(this.props.id, this.state.text);
+      return;
+    }
+    if (e.target.name === 'add-item') {
+      this.props.onAddItem(this.props.id, 'New Item');
+      return;
     }
   }
   render() {
-    const { text, position, list } = this.props;
+    const { text, position, list, itemsMap } = this.props;
     return (
       <div>
         <h3>({position}):
-
-        {this.state.editing ?
-            (
-              <span>
-                <input value={this.state.text} onChange={this.onChangeHandler} />
-                <button name="cancel" onClick={this.toggleEdit}>Cancel</button>
-                <button name="save" onClick={this.onClickHandler}>Save</button>
-              </span>
-            ) :
-            (
-              <span>
-                {text}
-                <button name="edit" onClick={this.toggleEdit}>Edit</button>
-              </span>
-            )}
-
+        <EditingButtons editing={this.state.editing} text={this.state.text} onChange={this.onChangeHandler} onToggle={this.toggleEdit} onClick={this.onClickHandler} />
         </h3>
-        <ul>
-          {list.length === 0 ? <li><i>No items</i></li> : ''}
-          {list.map(item => <li key={item.id}>({item.position}): {item.text}</li>)}
-        </ul>
+        <ItemListContainer list={list} />
       </div >
     );
   }
@@ -68,7 +61,8 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    onUpdateCategory: (id, text) => dispatch(updateCategory({ text: text, id: id }))
+    onUpdateCategory: (id, text) => dispatch(updateCategory({ text: text, id: id })),
+    onAddItem: (categoryId, text) => dispatch(addItem({ categoryId: categoryId, text: text })),
   };
 };
 

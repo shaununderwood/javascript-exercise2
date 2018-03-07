@@ -1,37 +1,37 @@
 require('babel-register')
 
-var dispatcher = require('redux-scuttlebutt/lib/server').default
+var dispatcher = require('redux-scuttlebutt/lib/server').default;
 
-var webpack = require('webpack')
-var webpackDevMiddleware = require('webpack-dev-middleware')
-var webpackHotMiddleware = require('webpack-hot-middleware')
-var config = require('./webpack.config')
+var webpack = require('webpack');
+var webpackDevMiddleware = require('webpack-dev-middleware');
+var webpackHotMiddleware = require('webpack-hot-middleware');
+var config = require('./webpack.config');
 
-var port = process.env['PORT'] || 3000
+var port = process.env['PORT'] || 3000;
 
-var app = new (require('express'))()
-var server = require('http').Server(app)
+var app = new (require('express'))();
+var server = require('http').Server(app);
 
-var compiler = webpack(config)
-app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }))
-app.use(webpackHotMiddleware(compiler))
+var compiler = webpack(config);
+app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
+app.use(webpackHotMiddleware(compiler));
 
 app.get("/", function (req, res) {
   res.sendFile(__dirname + '/client/index.html');
-})
+});
 app.get("/public/bundle.js", function (req, res) {
   res.sendFile(__dirname + '/client/public/bundle.js');
-})
+});
 app.get("/primus/primus.js", function (req, res) {
   res.sendFile(__dirname + '/node_modules/primus/dist/primus.js');
-})
+});
 
-dispatcher(server)
+dispatcher(server);
 
 server.listen(port, function (error) {
   if (error) {
-    console.error(error)
+    console.error(error);
   } else {
-    console.info("==> 🌎  Listening on port %s. Open up http://localhost:%s/ in your browser.", port, port)
+    console.info("==> 🌎  Listening on port %s. Open up http://localhost:%s/ in your browser.", port, port);
   }
-})
+});

@@ -55,7 +55,21 @@ export function moveCateogry(id, fromCategoryId, toCategoryId, toPosition) {
     }
   };
 }
-
+export function updateItem(delta) {
+  return {
+    type: SAVE_ITEM, item: delta
+  };
+}
+export function addItem(item) {
+  return {
+    type: ADD_ITEM,
+    item: {
+      type: ITEM,
+      categoryId: item.categoryId,
+      text: item.text
+    }
+  };
+}
 
 
 

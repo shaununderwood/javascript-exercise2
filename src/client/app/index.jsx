@@ -16,10 +16,11 @@ const enhancer = compose(
     ? window.__REDUX_DEVTOOLS_EXTENSION__(devToolsConfig)
     : f => f
 )
-const store = createStore(app, undefined, enhancer)
 
-import { addCategory, deleteCategory } from './services/actions';
+import { initialState } from './services/reducers';
+const store = createStore(app, initialState, enhancer)
 
+// import { addCategory, deleteCategory } from './services/actions';
 // store.dispatch(addCategory('countries'));
 // store.dispatch(addCategory('cars'));
 // store.dispatch(addCategory('shops'));
