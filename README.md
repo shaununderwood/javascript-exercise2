@@ -1,7 +1,7 @@
 # Instructions
 1. Clone the repo
 
-        git clone https://github.com/shaununderwood/javascript-exercise.git
+        git clone https://github.com/shaununderwood/javascript-exercise2
 
 2. install dependancies
 
