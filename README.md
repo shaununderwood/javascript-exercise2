@@ -16,7 +16,7 @@
 
         npm run serve
 
-5. Now navigate to the program by clicking on one of the links step (4) provides, or visit
+5. Now navigate to the program by clicking on one of the links step (4) provides, or visit. And open it in another client also
 
         http://localhost:3000/
 
