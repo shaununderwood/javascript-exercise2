@@ -8,6 +8,7 @@
 //
 
 "use strict";
+import itemList from './serverApp';
 
 var http = require('http');
 var url = require('url');
@@ -159,7 +160,16 @@ wsServer.on('connect', function (connection) {
           break;
 
         case 'APP':
-          break;
+
+          switch (msg.action.type) {
+            case 'SYNC':
+              let data = { action: 'SYNC', data: itemList.getAllData() };
+              let jsonData = JSON.stringify(data);
+              connection.sendUTF(jsonData);
+              sendToClients = false;
+              break;
+          }
+
       }
 
       // Convert the message back to JSON and send it out
@@ -187,3 +197,5 @@ wsServer.on('connect', function (connection) {
     console.log((new Date()) + " Peer " + connection.remoteAddress + " disconnected.");
   });
 });
+
+
