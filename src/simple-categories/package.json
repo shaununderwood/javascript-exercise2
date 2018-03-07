@@ -1,0 +1,12 @@
+{
+  "name": "simple-categories",
+  "version": "1.0.0",
+  "description": "",
+  "main": "ItemList.js",
+  "scripts": {
+    "client": "../../node_modules/.bin/http-server .",
+    "server": "node simpleServer.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
