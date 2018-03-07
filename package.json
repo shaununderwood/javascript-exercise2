@@ -25,7 +25,8 @@
     "react-hot-loader": "^4.0.0-rc.0",
     "react-redux": "^5.0.7",
     "redux": "^3.7.2",
-    "webpack": "^3.11.0"
+    "webpack": "^3.11.0",
+    "websocket": "^1.0.25"
   },
   "devDependencies": {
     "babel-plugin-transform-class-properties": "^6.24.1",
